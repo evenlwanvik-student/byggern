@@ -8,20 +8,24 @@
 
 #include "UART_driver.h"
 
-void exercise1(void) {
-	//UART
-	UART_transmit('a');		//Returns the character next in the alphabet.
-    char whatever = UART_receive();
-    UART_transmit(whatever+1);
+void exercise1(unsigned char c) {
+    //UART
+    UART_transmit(abc); 
+    // bchar whatever = UART_receive(); // this halts, bits indicating data is sent low?
+    // UART_transmit(whatever+1);
 }
 
 int main()
 {
     unsigned long clockspeed = F_CPU;
     UART_init(clockspeed);
+	
+    unsigned int charCtr = 65; // A in asci
     while (1)
     {
-        exercise1();
+        exercise1(char(charCtr));
+	asciCtr++;
+	if (asciCtr == 90) asciCtr = 65;
     }
 
     return 0;
