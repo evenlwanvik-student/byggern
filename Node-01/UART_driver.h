@@ -2,7 +2,7 @@
 #define UART_DRIVER_H_
 
 void UART_init(unsigned long clockspeed);
-int UART_transmit(unsigned char c);
-int UART_receive(void);
+void UART_transmit(unsigned char data);
+unsigned char UART_receive();
 
 #endif
