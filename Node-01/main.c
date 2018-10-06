@@ -16,6 +16,7 @@
 #include "joystick_driver.h"
 #include "bit_macros.h"
 #include "OLED_driver.h"
+#include "OLED_menu.h"
 
 #define OLED_CMD 0x000 // 0001 0000 000 000
 #define OLED_DATA 0x200 // 0001 0001 000 000
@@ -28,21 +29,20 @@
 // SRAM     from 0x1800-0x1FFF : 0001 1000 0000 0000 - 0001 1111 1111 1111
 
 void memory_layout_init() {
-    printf("memory_layout_init()\n");
+    printf("memory_layout_init()...\n");
     //_delay_ms(500);
     set_bit(MCUCR,SRE);		//Enable External Memory Interface. PE1 is automatically controlled as this command takes control.
     set_bit(SFIOR,XMM2);	//Remove 4 Most Significant Bits from address so that JTAG interface doesn't crash
 }
 
+/*
 void exercise1(unsigned char c) {
-
 	UART_transmit(UART_receive() + 1);		//Returns the character next in the alphabet.
 	printf("\nhello world!\n");
 
 }
 
 void exercise2() {
-
 	//SRAM
 	char data = 'c';
 	volatile char* ext_ram = 0x1000;
@@ -64,7 +64,7 @@ void exercise2() {
 		_delay_us(250);
 	}
 }
-
+*/
 void exercise3(void) {
 	//Joystick
 	joystick_position_t position;
@@ -99,9 +99,9 @@ void exercise3(void) {
 }
 
 void exercise4(void){
-    while(1){
-        //write_data(0xFF);
-        OLED_print_char('A');
+    while (1) {
+        OLED_menu_selection();
+        _delay_ms(200);
     }
 }
 
@@ -112,20 +112,26 @@ int main()
 
     UART_init(clockspeed);
 	memory_layout_init();
-    init_OLED();
-	//ADC_init();
-	//joystick_init(prescaler_joystick_timer);
-
-	//volatile char* ADC_pointer = 0x1400;
-	//char data_char = 0;
-	//uint8_t data = 0;
-	//uint8_t channel = 1;
-	//char channel_select = 0x00;
+	ADC_init();
+	joystick_init(prescaler_joystick_timer);
+    OLED_init();
+    OLED_menu_init();
 
 	//exercise1();
 	//exercise2();
 	//exercise3();
     exercise4();
+    // while(1){
+    //     OLED_clear();
+    //     uint8_t i = 0;
+    //     char* data = "Menu Demo\0";
+    //     //printf(data);
+    //     while (data[i] != '\0') {
+    //         OLED_printf(data,0,0);
+    //         i++;
+    //     }
+    //     _delay_ms(1000);
+    // }
 
     return 0;
 }
