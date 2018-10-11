@@ -10,7 +10,9 @@ volatile uint8_t menuNo;
 volatile uint8_t col_offset_main = 10;
 volatile uint8_t col_offset_sub = 20;
 volatile uint8_t line_offset = 1;
-volatile menu_options_t current_menu;
+volatile uint8_t option_line = line_offset + 1;         // arrow that indicates the current coice, initialize to 1st option (skips header)
+volatile menues_t current_menu;                         // always start program at main menu
+volatile menu_options_t current_option = MAIN_ITEM_1;   // Always start program at first item
 
 /*------------------- flash memory stuff -----------------*/
 
@@ -20,48 +22,50 @@ const char mainM100[] PROGMEM = "Main menu";
 // choices in main menu
 const char mainM101[] PROGMEM = "Menu Item 1";
 const char mainM102[] PROGMEM = "Menu Item 2";
-const char mainM103[] PROGMEM = "Menu Item 3";
+const char mainM103[] PROGMEM = "Credits";
 const char * const main_menu_pointer[] PROGMEM = {mainM101, mainM102, mainM103};
 
 const char creditsM200[] PROGMEM = "Credits";
-// choices in main menu
+// Credits page names
 const char creditsM201[] PROGMEM = "Even Wanvik";
 const char creditsM202[] PROGMEM = "Michael Mullins";
 const char creditsM203[] PROGMEM = "Unicorns";
 const char * const credits_menu_pointer[] PROGMEM = {creditsM201, creditsM202, creditsM203};
 
 //Menu structure
-//[0] -Number of level 0 menu items
-//[1]...[n] number of second level menu items
-//Eg. MSTR2[1] shows that menu item 1 has 3 submenus
+//Eg. MSIZE[1] shows that menu item 1 has 3 submenus
 const uint8_t MSIZE[] PROGMEM = {
-    3,    //number of menu items
-    3    //Number of submenu items of menu item 1
-    //add more later
+    3,    //number of main menu items
+    3     //Number of credits menu items
 };
 
 /*------------------- flash memory stuff -----------------*/
 
-menu_options_t OLED_menu_selection()
+void navigate_menu(void)
 {
-
+    uint8_t menusize = pgm_read_byte(&MSIZE[current_menu]);
     joystick_direction_t dir = joystick_direction_get();
-
-    if (dir==UP) {
-        OLED_goto_credits();
-        printf("going up");
-        // pos.line--;
-        // if (pos.line < 2) {
-        //     pos.line = pos.line + MSIZE[current_menu];
-        // }
-        // OLED_print_menu();
+    if (dir==UP) {                                  // If joystick is 'UP'
+        // OLED_goto_credits();                     
+        printf("going up");                      
+        option_line--;                              // current option line goes upwards to next option  
+        if (option_line < (line_offset + 1)) {      // if option line is smaller than offset + title line (1)
+            option_line = option_line + menusize;   // go to bottom option (cyclic menu)
+        }
+        OLED_print_menu();                          // print the menu
     }
     else if (dir==DOWN) {
-        OLED_goto_main();
+        //OLED_goto_main();
         printf("going down");
+        option_line++;
+        if (option_line > menusize) {
+            option_line = line_offset + 1;
+        }
+        OLED_print_menu();
     }
     else {
         if (joystick_button(JOYSTICKBUTTON)) {
+            printf("choosing option");  
             if (current_menu == MAIN_MENU) {
                 OLED_goto_credits();
             }
@@ -73,12 +77,31 @@ menu_options_t OLED_menu_selection()
     }
 }
 
-void OLED_print_menu() {
-
+void OLED_print_menu(void) {
+    uint8_t line = line_offset;                             // line iterator for printing all strings
+    uint8_t option_line = current_option + line_offset + 1; // arrow that indicates the current coice, starts at 1st option
+    switch current_menu {
+        case MAIN_MENU:
+            LED_alt_font_size(FONT8);                                       // big letters for menu name
+            OLED_printf_P(mainM100, line++, col_offset_main);               // print menu name 
+            OLED_alt_font_size(FONT5);                                      // small letters for menu options
+            for (uint8_t i = 0; i<pgm_read_byte(&MSIZE[current_menu]); i++) // print menu options
+                OLED_printf_P((char*)pgm_read_word(&main_menu_pointer[i]), line++, col_offset_sub);
+            OLED_print_char()                                    // print current line
+            break;
+        case CREDITS_MENU:
+            break;
+    }
 }
 
+void OLED_goto_menu(void) {
+    
+}
+
+
+
 // current menu = 0, M100
-void OLED_goto_main() {
+void OLED_goto_main(void) {
     OLED_clear();
     current_menu = MAIN_MENU;
     uint8_t line = line_offset;
