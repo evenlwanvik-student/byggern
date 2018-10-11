@@ -5,15 +5,23 @@
 
 #include "OLED_driver.h"
 
-void OLED_menu_init();
-void print_title_P(const char* data);
+void OLED_menu_init(void);
 
 typedef enum {
     MAIN_MENU,
     CREDITS_MENU
+} menues_t;
+
+typedef enum {
+    MAIN_ITEM_1,
+    MAIN_ITEM_2,
+    MAIN_ITEM_3,
+    MAIN_ITEM_4,
+    MAIN_ITEM_5,
+    MAIN_ITEM_6
 } menu_options_t;
 
-menu_options_t OLED_menu_selection();
+menu_options_t OLED_menu_selection(void);
 
 #endif /* OLED_MENU_H_ */
 
