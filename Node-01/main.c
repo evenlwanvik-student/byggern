@@ -100,7 +100,7 @@ void exercise3(void) {
 
 void exercise4(void){
     while (1) {
-        OLED_menu_selection();
+        OLED_navigate_menu();
         _delay_ms(200);
     }
 }
