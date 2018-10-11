@@ -13,12 +13,12 @@ typedef enum {
 } menues_t;
 
 typedef enum {
-    MAIN_ITEM_1,
-    MAIN_ITEM_2,
-    MAIN_ITEM_3,
-    MAIN_ITEM_4,
-    MAIN_ITEM_5,
-    MAIN_ITEM_6
+    MENU_ITEM_1,
+    MENU_ITEM_2,
+    MENU_ITEM_3,
+    MENU_ITEM_4,
+    MENU_ITEM_5,
+    MENU_ITEM_6
 } menu_options_t;
 
 menu_options_t OLED_menu_selection(void);
