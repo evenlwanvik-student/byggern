@@ -6,6 +6,7 @@
 #include "OLED_driver.h"
 
 void OLED_menu_init(void);
+void OLED_navigate_menu(void);
 
 typedef enum {
     MAIN_MENU,
@@ -20,8 +21,6 @@ typedef enum {
     MENU_ITEM_5,
     MENU_ITEM_6
 } menu_options_t;
-
-menu_options_t OLED_menu_selection(void);
 
 #endif /* OLED_MENU_H_ */
 
