@@ -29,7 +29,7 @@ const char creditsM200[] PROGMEM = "Credits";
 // Credits page names
 const char creditsM201[] PROGMEM = "Even Wanvik";
 const char creditsM202[] PROGMEM = "Michael Mullins";
-const char creditsM203[] PROGMEM = "Unicorns";
+const char creditsM203[] PROGMEM = "Back to Main Menu";
 const char * const credits_menu_pointer[] PROGMEM = {creditsM201, creditsM202, creditsM203};
 
 //Menu structure
@@ -41,8 +41,10 @@ const uint8_t MSIZE[] PROGMEM = {
 
 /*------------------- flash memory stuff -----------------*/
 
-void navigate_menu(void)
+void OLED_navigate_menu(void)
 {
+    uint8_t option_line = current_option + line_offset + 1;
+    option_line = 
     uint8_t menusize = pgm_read_byte(&MSIZE[current_menu]);
     joystick_direction_t dir = joystick_direction_get();
     if (dir==UP) {                                  // If joystick is 'UP'
@@ -51,8 +53,7 @@ void navigate_menu(void)
         option_line--;                              // current option line goes upwards to next option  
         if (option_line < (line_offset + 1)) {      // if option line is smaller than offset + title line (1)
             option_line = option_line + menusize;   // go to bottom option (cyclic menu)
-        }
-        OLED_print_menu();                          // print the menu
+        }                         
     }
     else if (dir==DOWN) {
         //OLED_goto_main();
@@ -61,25 +62,17 @@ void navigate_menu(void)
         if (option_line > menusize) {
             option_line = line_offset + 1;
         }
-        OLED_print_menu();
     }
-    else {
-        if (joystick_button(JOYSTICKBUTTON)) {
-            printf("choosing option");  
-            if (current_menu == MAIN_MENU) {
-                OLED_goto_credits();
-            }
-            else {
-                OLED_goto_main();
-            }
-            printf("button clicked");
-        }
+    else if joystick_button(JOYSTICKBUTTON){
+        printf("choosing option");  
+        OLED_choose_option();
     }
+    
+    OLED_print_menu(); 
 }
 
 void OLED_print_menu(void) {
     uint8_t line = line_offset;                             // line iterator for printing all strings
-    uint8_t option_line = current_option + line_offset + 1; // arrow that indicates the current coice, starts at 1st option
     switch current_menu {
         case MAIN_MENU:
             LED_alt_font_size(FONT8);                                       // big letters for menu name
@@ -87,15 +80,57 @@ void OLED_print_menu(void) {
             OLED_alt_font_size(FONT5);                                      // small letters for menu options
             for (uint8_t i = 0; i<pgm_read_byte(&MSIZE[current_menu]); i++) // print menu options
                 OLED_printf_P((char*)pgm_read_word(&main_menu_pointer[i]), line++, col_offset_sub);
-            OLED_print_char()                                    // print current line
+            OLED_goto_pos(option_line, col_offset_main);  // go to column before option to print the arrow
+            OLED_print_char('>');                         // print arrow for current option
             break;
         case CREDITS_MENU:
+            LED_alt_font_size(FONT8);                                       // big letters for menu name
+            OLED_printf_P(creditsM200, line++, col_offset_main);            // print menu name 
+            OLED_alt_font_size(FONT5);                                      // small letters for menu options
+            for (uint8_t i = 0; i<pgm_read_byte(&MSIZE[current_menu]); i++) // print menu options
+                OLED_printf_P((char*)pgm_read_word(&credits_menu_pointer[i]), line++, col_offset_sub);
+            OLED_goto_pos(option_line, col_offset_main);  // go to column before option to print the arrow
+            OLED_print_char('>');                         // print arrow for current option
             break;
     }
 }
 
-void OLED_goto_menu(void) {
-    
+void OLED_choose_option(void) {
+    switch (current_option) {
+        case MENU_ITEM_1:
+            switch (current_menu) {
+                case MAIN_MENU:
+                    printf("Choosing menu Item 1 in main menu");
+                    break;
+                case CREDITS_MENU:
+                    printf("Choosing menu Item 1 in credits menu");
+                    break;
+            }
+        case MENU_ITEM_2:
+            switch (current_menu) {
+                case MAIN_MENU:
+                    printf("Choosing menu Item 2 in main menu");
+                    break;
+                case CREDITS_MENU:
+                    printf("Choosing menu Item 2 in credits menu");
+                    break;
+            }
+        case MENU_ITEM_3:
+            switch (current_menu) {
+                case MAIN_MENU:
+                    printf("Going to credits menu");
+                    current_menu = CREDITS_MENU;
+                    break;
+                case CREDITS_MENU:
+                    printf("Going back to main menu");
+                    current_menu = MAIN_MENU;
+                    break;
+            }
+        default:
+            printf("%d is not an available choise yet", current_option)
+    }
+    current_option = MENU_ITEM_1;       // reset to menu_item 1 for new menu choice
+    option_line = line_offset + 1;      // reset to option line 1 for new menu choice
 }
 
 
