@@ -32,6 +32,7 @@ typedef enum {
     RBUTTON
 } usb_button_t;
 
+int joystick_button(usb_button_t button);
 void joystick_init(int prescaler);
 void auto_calibrate();
 
