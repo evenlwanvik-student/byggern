@@ -1,9 +1,11 @@
 #ifndef OLED_DRIVER_H_
 #define OLED_DRIVER_H_
 
+void OLED_clear();
 void OLED_init();
 void OLED_print_char(char print_c);
 void OLED_printf(char *data, uint8_t line, uint8_t col);
+void OLED_printf_P(const char * data, uint8_t line, uint8_t col);
 void OLED_align_centre(char* input_str);
 void OLED_goto_pos(uint8_t line, uint8_t column);
 void OLED_print_welcome_P(const char* data);
