@@ -6,7 +6,7 @@
 #include "DAC_driver.h"
 #include "MOTOR_driver.h"
 
-void motor_init(){
+void MOTOR_init(){
 
 	// Enable motor pin + set enable
 	set_bit(DDRH, PH4);
@@ -17,16 +17,18 @@ void motor_init(){
 
 	// Output Enable pin (active low, !OE)
 	set_bit(DDRH, PH5);
+    set_bit(PORTH, PH5);
 
 	//Selection pin: SEL
 	set_bit(DDRH, PH3);
 
 	// Set Reset pin: RST
 	set_bit(DDRH, PH6);
+	set_bit(PORTH, PH6);
+
 
 	// Reset encoder
 	MOTOR_encoder_reset();
-
 	// // Set data bits to off (inputs by default)
 	// clear_bit(DDRK, PK0);
 	// clear_bit(DDRK, PK1);
@@ -52,11 +54,9 @@ void MOTOR_encoder_reset() {
 motor_dir_t MOTOR_set_direction(uint8_t joystick_pos){
 
     if (joystick_pos < 48) {
-        clear_bit(PORTH, PH1);
         return LEFT;
     }
     else if (joystick_pos >= 51){
-        set_bit(PORTH, PH1);
         return RIGHT;
     }
     else {
@@ -67,11 +67,14 @@ motor_dir_t MOTOR_set_direction(uint8_t joystick_pos){
 void MOTOR_move(uint8_t joystick_pos) {
 
     if (MOTOR_set_direction(joystick_pos) == LEFT){
+        printf("Going left, Output = %d\r\n", (int)(round((50-joystick_pos)*5.1)));
+        clear_bit(PORTH, PH1);
         MOTOR_speed_set((int)(round((50-joystick_pos)*5.1)));
     }
     else if (MOTOR_set_direction(joystick_pos) == RIGHT){
+        printf("Going right, Output = %d\r\n", (int)(round((joystick_pos-50)*5.1)));
+        set_bit(PORTH, PH1);
         MOTOR_speed_set((int)(round((joystick_pos-50)*5.1)));
-
     }
     else {
         MOTOR_speed_set(0);
