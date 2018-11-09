@@ -7,7 +7,7 @@
 
 #include "UART_driver.h"
 
-void UART_init(unsigned long clockspeed, node_t node)
+void UART_init(unsigned long clockspeed)
 {
     printf("UART_init()...\n");
     _delay_ms(1000);
@@ -19,16 +19,9 @@ void UART_init(unsigned long clockspeed, node_t node)
     UBRR0L = (unsigned char) ubrr;
     /* Enable receiver and transmitter */
     UCSR0B = (1<<RXEN0) | (1<<TXEN0);
-
     /* Set frame format: 8data, 2stop bit */
-    if (node == NODE1) {
-        UCSR0C = (1<<URSEL0) | (1<<USBS0) | (3<<UCSZ00);
-    }
-    else {
-        UCSR0C = (1<<USBS0) | (3<<UCSZ00);
-    }
+    UCSR0C = (1<<USBS0) | (3<<UCSZ00);
 
-    // Enable i/o stream via UART
     fdevopen(UART_transmit, UART_receive);
 }
 

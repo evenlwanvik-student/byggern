@@ -1,7 +1,7 @@
 # List all source files to be compiled; separate with space
-SOURCE_FILES := main.c UART_driver.c led.c SRAM_driver.c ADC_driver.c \
-joystick_driver.c OLED_driver.c OLED_menu.c SPI_driver.c MCP_driver.c  \
-CAN_driver.c
+SOURCE_FILES := main_2.c UART_driver.c CAN_driver.c MCP_driver.c\
+SPI_driver.c PWM_driver.c SERVO_driver.c IR_driver.c ADC_driver.c\
+TWI_Master.c DAC_driver.c MOTOR_driver.c
 
 # Set this flag to "yes" (no quotes) to use JTAG; otherwise ISP (SPI) is used
 PROGRAM_WITH_JTAG := yes
@@ -13,8 +13,8 @@ ifeq ($(PROGRAM_WITH_JTAG), yes)
 endif
 
 BUILD_DIR := build
-TARGET_CPU := atmega162
-TARGET_DEVICE := m162
+TARGET_CPU := atmega2560
+TARGET_DEVICE := m2560
 
 CC := avr-gcc
 CFLAGS := -O -std=c11 -mmcu=$(TARGET_CPU)

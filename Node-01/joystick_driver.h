@@ -32,14 +32,16 @@ typedef enum {
     RBUTTON
 } usb_button_t;
 
-int joystick_button(usb_button_t button);
 void joystick_init(int prescaler);
 void auto_calibrate();
 
+int joystick_button(usb_button_t button);
 joystick_position_t joystick_position_get();
 joystick_direction_t joystick_direction_get();
 
 int slider_left_get(void);
 int slider_right_get(void);
+
+int joystick_button(usb_button_t button);
 
 #endif /* JOYSTICK_DRIVER_H_ */

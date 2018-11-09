@@ -80,7 +80,6 @@ void joystick_init(int prescaler){
     //control_state = JOYSTICK_X;
     ADC_start_read(CHANNEL1);
 
-
     //-------------INITIALIZE TIMER INPUT-----------------
 
     // Disable global interrupts
@@ -116,7 +115,6 @@ int joystick_button(usb_button_t button){
 }
 
 joystick_position_t joystick_position_get(){
-
     return joystick_pos;
 }
 

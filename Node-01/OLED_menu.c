@@ -134,8 +134,8 @@ void OLED_navigate_menu(void) // call this function from main
         OLED_print_menu();
     }
     else if (joystick_button(JOYSTICKBUTTON) ||
-               joystick_button(RIGHT_SLIDER) ||
-               joystick_button(LEFT_SLIDER)){
+               joystick_button(RBUTTON) ||
+               joystick_button(LBUTTON)){
         printf("choosing option\n");
         OLED_choose_option();
         OLED_print_menu();
@@ -157,4 +157,3 @@ void OLED_menu_init(void) {
     OLED_clear();
     OLED_print_menu();
 }
-
