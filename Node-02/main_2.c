@@ -110,6 +110,7 @@ void main(){
     SERVO_init(clk_speed);
     ADC_init();
     DAC_init();
+    MOTOR_init();
 
     //exercise6();
     //exercise7();
