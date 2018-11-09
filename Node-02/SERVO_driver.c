@@ -12,6 +12,7 @@ void SERVO_init(unsigned long clk_freq){
 
 // servo_val = 0-100
 void SERVO_set(int servo_val){
+	servo_val = 100-servo_val;
 
 	float min_pwm = 0.001;
 	float max_pwm = 0.002;
