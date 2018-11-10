@@ -140,10 +140,8 @@ void OLED_print_char(char data){
             }
             break;
     }
-
-
 }
-
+    
 void OLED_printf(char* data, uint8_t line, uint8_t col) {
     int i = 0;
     OLED_goto_pos(line, col);
@@ -151,6 +149,12 @@ void OLED_printf(char* data, uint8_t line, uint8_t col) {
         OLED_print_char(data[i]);
         i++;
     }
+}
+
+void OLED_print_value(uint8_t val, uint8_t line, uint8_t col) {
+    char out_string[3];
+    sprintf(out_string, "%d", val);
+    OLED_printf(&out_string, line, col)
 }
 
 uint8_t OLED_fontsize_get() {
