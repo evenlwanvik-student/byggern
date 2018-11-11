@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 #include "MCP2515.h"
 #include "MCP_driver.h"
@@ -15,6 +16,8 @@ ISR(INT0_vect) {
 }
 
 void CAN_init(void){
+    printf("Initializing CAN driver...\n\r");
+    _delay_ms(1000);
     MCP2515_reset();
     MCP2515_write(MCP_CANCTRL , MODE_NORMAL);
 
@@ -93,7 +96,7 @@ void CAN_read(can_msg_t* msg_read){
     for (uint8_t i = 0; i < msg_read->length ; i++){
         msg_read->data[i] = MCP2515_read(MCP_RXB0DM + i);
     }
-    
+
     MCP2515_bit_modify(MCP_CANINTF, 1, 0); // set interupt vector 1 to 0
     MCP2515_bit_modify(MCP_CANINTF, 2, 0); // set interupt vector 2 to 0
 }

@@ -9,9 +9,6 @@
 
 void UART_init(unsigned long clockspeed, node_t node)
 {
-    printf("UART_init()...\n");
-    _delay_ms(1000);
-
     unsigned long baud = BAUD;
     unsigned char ubrr = (clockspeed/(16*baud))-1;
     /* Set the baud rate */
@@ -30,6 +27,9 @@ void UART_init(unsigned long clockspeed, node_t node)
 
     // Enable i/o stream via UART
     fdevopen(UART_transmit, UART_receive);
+
+    printf("\n\rInitializing UART driver...\n\r");
+    _delay_ms(1000);
 }
 
 void UART_transmit(unsigned char data)

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <avr/io.h>
+#include <util/delay.h>
 
 char SPI_transmission(char data){ //HUSK Å SKRIV TRANSMISSION PÅ ALLE WRITE/READ
     /*Start transmission*/
@@ -13,6 +14,8 @@ char SPI_transmission(char data){ //HUSK Å SKRIV TRANSMISSION PÅ ALLE WRITE/RE
 }
 
 void SPI_init(void){
+    printf("Initializing SPI driver...\n\r");
+    _delay_ms(1000);
     /*set SS, MOSI and SCK output, all others input */
     DDRB = (1<<PB4) | (1<<PB5) | (1<<PB7);
     /*Enable SPI, Master, set clock rate fck/16 */

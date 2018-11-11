@@ -16,7 +16,7 @@ ISR(INT1_vect){
 }
 
 void ADC_init(void){
-    printf("ADC_init()...\n");
+    printf("Initializing ADC driver...\n\r");
     _delay_ms(1000);
 
 	//INITIALIZE INTERRUPT ON PIN PD3

@@ -20,10 +20,10 @@ typedef struct {
 
 typedef enum {
     NEUTRAL,
-    UP,
-    DOWN,
     RIGHT,
-    LEFT
+    LEFT,
+    UP,
+    DOWN
 } joystick_direction_t;
 
 typedef enum {

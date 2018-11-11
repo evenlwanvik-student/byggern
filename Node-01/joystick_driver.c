@@ -66,7 +66,7 @@ void auto_calibrate(){
 
 void joystick_init(int prescaler){
 
-    printf("joystick_init()...\n");
+    printf("Initializing joystick driver...\n");
     _delay_ms(1000);
 
     // Button inputs:
@@ -101,15 +101,15 @@ void joystick_init(int prescaler){
 int joystick_button(usb_button_t button){
 
 	switch (button) {
-		case JOYSTICKBUTTON :
-			return !test_bit(PINB, PINB0);
-		case LBUTTON :
-			return test_bit(PINB, PINB2);
-		case RBUTTON :
-			return test_bit(PINB, PINB1);
-		default:
-			printf("Not valid button");
-			return EXIT_FAILURE;
+			case JOYSTICKBUTTON :
+					return !test_bit(PINB, PINB0);
+			case LBUTTON :
+					return test_bit(PINB, PINB2);
+			case RBUTTON :
+					return test_bit(PINB, PINB1);
+			default:
+					printf("Not valid button");
+					return EXIT_FAILURE;
 		}
 
 }
