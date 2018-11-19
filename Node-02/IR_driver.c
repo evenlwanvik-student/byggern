@@ -12,9 +12,8 @@ uint8_t IR_blocked(void) {
     if (FILTER_ORDER == 1) {
         return (ADC_read() < obstructed);
     }
-    else { // FIX FILTER BRO?
+    else {
         uint16_t moving_avg[FILTER_ORDER];
-
         // set first val, and add rest to the avg
         uint16_t measured =  ADC_read();
         uint16_t avg = measured;

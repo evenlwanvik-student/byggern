@@ -1,30 +1,37 @@
+#ifndef F_CPU
+#define F_CPU 4915200UL	//This is just a macro, it has no data type.
+#endif
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <avr/io.h>
+#include <util/delay.h>
 
 #include "OLED_driver.h"
 #include "joystick_driver.h"
 
 #include "snake_OLED.h"
 
-#define SPEED 20000
+typedef unsigned char uchar_t;
+
+#define SPEED 5000
 
 // list to record the every turns
 struct node
 {
-	joystick_direction_t dir;	// direction
-	unsigned char body_length;			// the count of the dot in this section
-	struct node *next;			  // next node
+		joystick_direction_t dir;	  // direction
+		unsigned char body_length;	// the count of the dot in this section
+		struct node *next;			    // next node
 };
 
 struct snake
 {
-  	unsigned char head_x;		    // coordinate of the head
-  	unsigned char head_y;
-  	unsigned char tail_x;		    // coordinate of the tail
-  	unsigned char tail_y;
+  	uchar_t head_x;		    // coordinate of the head
+  	uchar_t head_y;
+  	uchar_t tail_x;		    // coordinate of the tail
+  	uchar_t tail_y;
   	joystick_direction_t dir;  // current dirction of the head
-    unsigned char level;		   // game level
+    uchar_t level;		   // game level
   #define L0 0x00
   #define L1 0x01
   #define L2 0x02
@@ -34,16 +41,16 @@ struct snake
   #define L6 0x06
   #define L7 0x07
   	unsigned int  body_length;	// number of dots for body
-  	unsigned char next_x;	      // coordinate of the destination
-  	unsigned char next_y;
+  	uchar_t next_x;	      // coordinate of the destination
+  	uchar_t next_y;
   	struct node * p;		        // the head of the list, the head is the earlist turn
 } head_data;
 
-unsigned char hit_self(uint8_t x,uint8_t y); //prototype
+uchar_t hit_self(uchar_t x,uchar_t y); //prototype
 
 /* use four pixel as a dot,that means 128*64pixels have 64*32 dots
 fill the four pixels with 1 or 0 */
-void encode_dot(uint8_t x,uint8_t y,uint8_t val)
+void encode_dot(uchar_t x,uchar_t y,uchar_t val)
 {
   	one_pixel(x<<1,y<<1,val);
   	one_pixel(x<<1,(y<<1)+1,val);
@@ -70,15 +77,14 @@ void create_dot() {
 @(x,y) means the start coordinate
 @length is the default length of the snake
 @level is the speed of the game */
-void snake_init(uint8_t x,uint8_t y,uint8_t length,uint8_t level)
+void snake_init(uchar_t x,uchar_t y,uchar_t length,uchar_t level)
 {
-		printf("initializing snake game ...");
 		snake_OLED_init();
-  	uint8_t i;
+  	uchar_t i;
   	head_data.head_x = x + length - 1;	   // head of the snake
   	head_data.head_y = y;
-  	head_data.head_x = x;				           // tail of the snake
-  	head_data.head_y = y;
+  	head_data.tail_x = x;				           // tail of the snake
+  	head_data.tail_y = y;
     head_data.dir = RIGHT;	               // directon
   	head_data.level = level;			         // level
   	head_data.body_length = length;		     // length
@@ -90,10 +96,15 @@ void snake_init(uint8_t x,uint8_t y,uint8_t length,uint8_t level)
   	head_data.p->body_length = length;		// start length
   	head_data.p->next = 0;					       // no next node
   	update_OLED();							           //refresh the screen
+		printf("Snake init ...\n\r");
+		_delay_ms(5000);
 }
 
-//if the snake hit itself  1 hit 0 not hit
-uint8_t hit_self(uint8_t x,uint8_t y)
+/* if the snake hit itself  1 hit 0 not hit
+@x: x coordinate in matrix
+@y: y coordinate in matrix
+*/
+uchar_t hit_self(uchar_t x,uchar_t y)
 {
 	 return read_pixel(x<<1,y<<1);
 }
@@ -101,7 +112,7 @@ uint8_t hit_self(uint8_t x,uint8_t y)
 uint8_t move()
 {
     uint8_t pos;
-    uint8_t x,y;
+    uchar_t x,y;
     struct node * tmp; // temporary node
 
     // check if player hits wall
@@ -120,7 +131,9 @@ uint8_t move()
 
     tmp = head_data.head_y;
     while (tmp->next != 0) tmp = tmp->next; // find the last node (the last turn of the snake)
-    tmp->body_length++;                           // add the count
+    tmp->body_length++;                     // add the count
+		printf("\nnect location: x = %d, y = %d\n\r", x,y);
+		printf("current head: x = %d, y = %d\n\n\r", head_data.head_x,head_data.head_y);
 
     //if the snake hit the destination
   	if(x == head_data.next_x && y == head_data.next_y)
@@ -130,17 +143,22 @@ uint8_t move()
     		head_data.head_x = x;	        //set the new coordinate of the head
     		head_data.head_y = y;
         create_dot();
-    		update_OLED();			        // refresh
+    		update_OLED();			          // refresh
     		return 0;				              // return to new iteration
+				printf("\nsup\n\r");
   	}
     // if it hits itself
     else if (hit_self(x,y) &&
              x != head_data.tail_x &&
              y != head_data.tail_y)
+		{
+						 printf("\ngame over\n\r");
              return 1;                //gameover
+		}
     // normal movement
     else
     {
+				printf("\nsup\n\r");
         encode_dot(x,y,1);			        // move ahead
         head_data.head_x = x;	          // set the new head coordinate
         head_data.head_y = y;
@@ -167,7 +185,9 @@ uint8_t move()
             default:break;
         }
     }
+		printf("\nnot game over 2\n\r");
     return 0; // return to new iteration
+
 }
 
 void play_snake()
@@ -191,8 +211,8 @@ void play_snake()
     }
     while(1)
     {
-        dir = joystick_direction_get();          // get current direction from joystick
-        if ((dir != 0) && (dir != current_dir)) // if we have a new direction (not neutral)
+        dir = joystick_direction_get();         // get current direction from joystick
+				if ((dir != 0) && (dir != current_dir)) // if we have a new direction (not neutral)
         {
             // Snake can't turn 180*
             if ((dir == RIGHT && current_dir == LEFT)  ||
@@ -235,13 +255,17 @@ void play_snake()
     }
 }
 
-int main_snake(){
+void main_snake(){
 		TCNT1H=0x00; // use the TCNT1 timer as seed
-		TCNT1L=0x00;
+	  TCNT1L=0x00;
+	  TCCR1A=0x03; //ctc mode  use icr1
+	  TCCR1B=0x01; //system clock;
+	  ICR1H=0xff;
+	  ICR1L=0xff;
 		while(1)
 		{
-				printf("new game\n\r");
-				snake_init(5,5,8,0);
+				printf("New game\n\n\r");
+				snake_init(10,10,8,0);
 				play_snake();
 		}
 }

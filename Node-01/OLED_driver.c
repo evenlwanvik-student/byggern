@@ -1,3 +1,7 @@
+#ifndef F_CPU
+#define F_CPU 4915200UL	//This is just a macro, it has no data type.
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -33,10 +37,10 @@ void OLED_set_adressing_mode(adressing_mode_t mode){
 
 void OLED_goto_line(uint8_t line){
     if (line < 8) {
-        pos.line = line; // update current position
-        OLED_set_adressing_mode(PAGE_MODE); //
-        write_cmd(0xB0 + line); // B0 is the page start address + line is the wanted line
- 		OLED_set_adressing_mode(HORIZONTAL_MODE);
+        pos.line = line;                      // update current position
+        OLED_set_adressing_mode(PAGE_MODE);
+        write_cmd(0xB0 + line);               // B0 is the page start address + line is the wanted line
+ 		    OLED_set_adressing_mode(HORIZONTAL_MODE);
     }
 }
 
@@ -46,12 +50,13 @@ void OLED_goto_column(uint8_t column){
         pos.col = column; // update current position
         /* We need to set 0-127 bit, but can only use 0-16. We'll combine it into
         two 0-16 hexadecimals to be able to create a 127bit address*/
-        write_cmd(0x00 + (column & 0x0F)); // AND with 00001111 to set lower bits
-        write_cmd(0x10 + ((column & 0xF0)>>4)); // AND with 11110000 to set higher bits
+        write_cmd(0x00 + (column & 0x0F));       // bitmask to set lower bits
+        write_cmd(0x10 + ((column & 0xF0)>>4));  // bitmask to set higher bits
         OLED_set_adressing_mode(HORIZONTAL_MODE);
     }
 }
 
+// E.T. go home
 void OLED_home(){
     OLED_goto_line(0);
     OLED_goto_column(0);
@@ -61,9 +66,9 @@ void OLED_home(){
 void OLED_clear_line(uint8_t line){
     OLED_goto_pos(line, 0);
     for (uint8_t i = 0; i<128; i++) {
-        write_data(0b00000000); // set byte (0b) to 0
+        write_data(0b00000000);        // clear pixels in every column
     }
-    OLED_goto_line(line); // go back to [line][0]
+    OLED_goto_line(line);              // go back to start of line
 }
 
 /* ----------------- functions included in header ----------------- */
@@ -78,8 +83,6 @@ void OLED_clear(){
 
 void OLED_init()
 {
-    printf("Initializing OLED driver...\n");
-    _delay_ms(1000);
     write_cmd(0xae); // display off
     write_cmd(0xa1); //segment remap
     write_cmd(0xda); //common pads hardware: alternative
@@ -103,7 +106,7 @@ void OLED_init()
     write_cmd(0xa6); //set normal display
     write_cmd(0xaf); // display on
 
-    write_cmd(0x40); //--set start line address
+    write_cmd(0x40); //set start line address
 
     OLED_clear();
 }
@@ -172,6 +175,23 @@ void OLED_alt_font_size(font_enum_t size){
         case (FONT8):
             font_size = 8;
             break;
+    }
+}
+
+void OLED_print_countdown(uint8_t line)
+{
+    OLED_clear();
+    for (int8_t k = 2; k>=0;k--)
+    {
+        for (uint8_t i = 0; i < 2; i++)
+        {
+            OLED_goto_pos(line+i, 50);
+            for (uint8_t j = 0 ; j < 16; j++)
+            {
+                write_data(pgm_read_byte(&font16[i+2*k][j]));
+            }
+        }
+        _delay_ms(1000);
     }
 }
 

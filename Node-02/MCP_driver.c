@@ -1,3 +1,7 @@
+#ifndef F_CPU
+#define F_CPU 16000000UL	//This is just a macro, it has no data type.
+#endif
+
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>

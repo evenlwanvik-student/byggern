@@ -1,3 +1,5 @@
+# This is an example makefile 
+
 # List all source files to be compiled; separate with space
 SOURCE_FILES := main.c led.c
 

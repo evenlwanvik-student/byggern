@@ -12,6 +12,8 @@ void OLED_goto_pos(uint8_t line, uint8_t column);
 void OLED_print_welcome_P(const char* data);
 uint8_t OLED_fontsize_get();
 
+void OLED_print_countdown(uint8_t line);
+
 typedef enum {
     FONT8,
     FONT5,

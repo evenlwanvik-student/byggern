@@ -1,3 +1,7 @@
+#ifndef F_CPU
+#define F_CPU 4915200UL	//This is just a macro, it has no data type.
+#endif
+
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>
@@ -6,6 +10,7 @@
 #include "SPI_driver.h"
 #include "MCP2515.h"
 
+// Read received CAN data and send to MCU via SPI
 char MCP2515_read(char addr_byte)
 {
     clear_bit(PORTB, PB4);
@@ -19,6 +24,7 @@ char MCP2515_read(char addr_byte)
     return data;
 }
 
+// write CAN data from MCU to MCP2515 via SPI
 void MCP2515_write(char addr_byte, char cData)
 {
     clear_bit(PORTB,PB4);
@@ -31,6 +37,7 @@ void MCP2515_write(char addr_byte, char cData)
     set_bit(PORTB , PB4);
 }
 
+// send command to check if we can send
 void MCP2515_request_to_send(char instr_data){
     clear_bit(PORTB, PB4);
 

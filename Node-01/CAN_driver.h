@@ -5,7 +5,7 @@
 typedef struct {
     volatile unsigned short int id;
     volatile unsigned char length;
-    volatile char data[8];
+    volatile char data[6];
 } can_msg_t;
 
 void CAN_error();

@@ -16,16 +16,16 @@ In this project, we (a group of two in this case) were to create an electromecha
 * **part 8** - Controlling motor and solenoid
 * **part 9** - Completion of the project and extras
 
-
+example hierarchy of each node folder:
 ```
 .
 ├── build
 │   ├── a.out
-│   ├── led.o
+│   ├── pingpong.o
 │   ├── main.hex
 │   └── main.o
-├── led.c
-├── led.h
+├── pingpong.c
+├── pingpong.h
 ├── main.c
 └── Makefile
 

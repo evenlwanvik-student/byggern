@@ -6,13 +6,13 @@ void SERVO_init(unsigned long clk_freq){
 
 	float period_sec = 0.02;
 	PWM_init(period_sec, clk_freq);
-	PWM_width_set(0.0015);
+	PWM_width_set(0.0015); // set to center
 
 }
 
 // servo_val = 0-100
 void SERVO_set(int servo_val){
-	servo_val = 100-servo_val;
+	//servo_val = 100-servo_val;
 
 	float min_pwm = 0.001;
 	float max_pwm = 0.002;

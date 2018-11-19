@@ -1,3 +1,7 @@
+#ifndef F_CPU
+#define F_CPU 16000000UL	//This is just a macro, it has no data type.
+#endif
+
 #include <avr/io.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
@@ -41,31 +45,7 @@ uint8_t CAN_int_vect(){
     else return 0;
 }
 
-void CAN_error(){
-
-}
-
-// uint8_t CAN_transmit_complete(uint8_t buffer){
-//     uint8_t transmit_flag = MCP2515_read(MCP_CANINTF);
-//     if ((transmit_flag & (uint8_t)pow(2,2+buffer)) == (uint8_t)pow(2,2+buffer)){ //pow2²⁺buffer = transmit flag
-//         return 0;
-//     }
-//
-//     return 1;
-// }
-
 void CAN_send(can_msg_t* msg){
-
-    // uint8_t send_buffer = 0;
-    // // check if any of the buffers are available
-    // while (!(CAN_transmit_complete(send_buffer))){
-    //      send_buffer += 1;
-    //      // only 3 buffers..
-    //      if (send_buffer > 2) {
-    //          send_buffer = 0;
-    //      }
-    //  }
-
     /* Arbitration field; set ID and length */
     char id_high = msg->id >> 3;
     char id_low = msg->id << 5;

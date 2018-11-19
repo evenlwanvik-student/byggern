@@ -15,7 +15,7 @@ typedef struct {
 } joystick_position_t;
 
 typedef struct {
-	uint8_t left, right;
+	int8_t left, right;
 } sliders_position_t;
 
 typedef enum {

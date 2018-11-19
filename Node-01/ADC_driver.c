@@ -1,3 +1,7 @@
+#ifndef F_CPU
+#define F_CPU 4915200UL	//This is just a macro, it has no data type.
+#endif
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <avr/io.h>
@@ -5,18 +9,17 @@
 #include <util/delay.h>
 
 #include "ADC_driver.h"
-//#include "memory_layout.h"
 #include "bit_macros.h"
 
 volatile char* ext_ADC_ptr = 0x1400; // pointer to adress we want to write to, starting at 0x1400
 volatile char ADC_data; //
 
 ISR(INT1_vect){
-	ADC_data = ext_ADC_ptr[0x00];
+		ADC_data = ext_ADC_ptr[0x00];
 }
 
 void ADC_init(void){
-    printf("Initializing ADC driver...\n\r");
+    //printf("Initializing ADC driver...\n\r");
     _delay_ms(1000);
 
 	//INITIALIZE INTERRUPT ON PIN PD3
@@ -60,6 +63,6 @@ void ADC_start_read(channel_t channel){
 			return EXIT_FAILURE;
 	}
 
-	ext_ADC_ptr[0x00] = data;
+	ext_ADC_ptr[0x00] = data; // 0x1404
 
 }

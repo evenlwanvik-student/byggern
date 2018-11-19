@@ -1,13 +1,12 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 
-
 #include "TWI_Master.h"
 
 void DAC_init(){
-    cli();
+    cli(); // disable interrupts
     TWI_Master_Initialise();
-    sei(); // enable interupts again
+    sei(); // enable interupts
 }
 
 void DAC_data_transmit(uint8_t data){
