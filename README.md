@@ -1,4 +1,4 @@
-# "Byggern" on Linux
+# Electromechanical ping-pong game (BYGGERN)
 
 [TTK4155 - Embedded and Industrial Computer Systems Design](https://www.ntnu.edu/studies/courses/TTK4155#tab=omEmnet) (Autumn 2018)
 
