@@ -1,6 +1,8 @@
 # "Byggern" on Linux
 
-[TTK4155 - Embedded and Industrial Computer Systems Design](https://www.ntnu.edu/studies/courses/TTK4155#tab=omEmnet)
+[TTK4155 - Embedded and Industrial Computer Systems Design](https://www.ntnu.edu/studies/courses/TTK4155#tab=omEmnet) (Autumn 2018)
+
+Take note that this was our first experience with coding in C, and our group were one person less than the accepted group size of three. 
 
 **Course content:** Design of embedded computer systems. Computer architectures and system components for embedded and industrial applications. Microcontrollers and specialized microprocessors. Parallel and seriabl bus systems. Datacommunication in industrial environments. Analog/digital interfaces.
 
